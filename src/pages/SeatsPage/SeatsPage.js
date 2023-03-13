@@ -1,30 +1,94 @@
+import axios from "axios"
+import { API_CINEFLIX } from "../../constants/API"
+
+import { useEffect, useState } from "react"
+
+import { useParams, Link } from "react-router-dom"
+
 import styled from "styled-components"
+import Footer from "../../components/Footer/Footer"
+import SeatsButton from "./SeatsButton.js/SeatsButton"
 
 export default function SeatsPage() {
+    const _colors = [{
+        color: "#808F9D",
+        border: "#C3CFD9"
+    }, {
+        color: "#0E7D71",
+        border: "#1AAE9E"
+    }, {
+        color: "#F7C52B",
+        border: "#FBE192"
+    }]
+    const { idSeats } = useParams()
+    const [seats, setSeats] = useState([])
+
+    const [idsOfSeats, setIdsOfSeats] = useState([])
+
+    useEffect(() => {
+        const requestSeatsAPI = axios.get(API_CINEFLIX + `cineflex/showtimes/${idSeats}/seats`)
+
+        requestSeatsAPI.then(
+            res => setSeats(res.data)
+        )
+
+        requestSeatsAPI.catch(
+            res => alert(res)
+        )
+
+    }, [])
+
+    if ( seats.length === 0 ) {
+        return (
+            <>
+                carregando...
+            </>
+        )
+    }
 
     return (
         <PageContainer>
-            Selecione o(s) assento(s)
+            <h1>Selecione o(s) assento(s)</h1>
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {seats.seats.map(seat =>
+
+                        <SeatsButton
+                            isAvailable={seat.isAvailable}
+                            id={seat.id}
+                            name={seat.name}
+
+                            _colors={_colors}
+
+                            setIdsOfSeats={setIdsOfSeats}
+                            idsOfSeats={idsOfSeats}
+
+                            key={seat.id} 
+                        />
+                    )
+                }
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle 
+                        color={_colors[1].color} 
+                        border={_colors[1].border}
+                    />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle
+                        color={_colors[0].color} 
+                        border={_colors[0].border}
+                    />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle />
+                    <CaptionCircle 
+                        color={_colors[2].color} 
+                        border={_colors[2].border}
+                    />
                     Indisponível
                 </CaptionItem>
             </CaptionContainer>
@@ -39,15 +103,7 @@ export default function SeatsPage() {
                 <button>Reservar Assento(s)</button>
             </FormContainer>
 
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
-                </div>
-            </FooterContainer>
+            <Footer />
 
         </PageContainer>
     )
@@ -96,8 +152,8 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${props => props.border};
+    background-color: ${props => props.color};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -111,55 +167,4 @@ const CaptionItem = styled.div`
     flex-direction: column;
     align-items: center;
     font-size: 12px;
-`
-const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
-    height: 25px;
-    width: 25px;
-    border-radius: 25px;
-    font-family: 'Roboto';
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 3px;
-`
-const FooterContainer = styled.div`
-    width: 100%;
-    height: 120px;
-    background-color: #C3CFD9;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 20px;
-    position: fixed;
-    bottom: 0;
-
-    div:nth-child(1) {
-        box-shadow: 0px 2px 4px 2px #0000001A;
-        border-radius: 3px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        margin: 12px;
-        img {
-            width: 50px;
-            height: 70px;
-            padding: 8px;
-        }
-    }
-
-    div:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        p {
-            text-align: left;
-            &:nth-child(2) {
-                margin-top: 10px;
-            }
-        }
-    }
 `

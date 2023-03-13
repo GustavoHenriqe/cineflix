@@ -1,45 +1,63 @@
+import { useEffect, useState } from "react"
+import { useParams, Link } from "react-router-dom"
+
+import Footer from "../../components/Footer/Footer"
+
 import styled from "styled-components"
 
-export default function SessionsPage() {
+import axios from "axios"
+import { API_CINEFLIX } from "../../constants/API"
 
+export default function SessionsPage() {
+    const { idFilm } = useParams()
+    const [ sessions, setSessions ] = useState([])
+    
+    useEffect(() => {
+        const requestSessionsAPI = axios.get(API_CINEFLIX + `cineflex/movies/${idFilm}/showtimes`)
+        
+        requestSessionsAPI.then(
+            res => setSessions(res.data)
+        )
+
+        requestSessionsAPI.catch(
+            res => alert(res)
+        )
+
+    }, [])
+
+    if ( sessions.length === 0 ) {
+        return (
+            <>
+                Carregando...
+            </>
+        )
+    }
     return (
         <PageContainer>
             Selecione o horário
             <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                {sessions.days.map(session => 
+                        <SessionContainer key={session.id}>
+                            {session.weekday} - {session.date}
 
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                            <ButtonsContainer>
+                                {session.showtimes.map(showtimes =>
+                                        <Link 
+                                            key={showtimes.id} 
+                                            to={"/assentos/" + showtimes.id}
+                                        >
+                                            <button>
+                                                {showtimes.name}
+                                            </button>
+                                        </Link>
+                                    )
+                                }
+                            </ButtonsContainer>
+                        </SessionContainer>
+                    )
+                }
             </div>
-
-            <FooterContainer>
-                <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                </div>
-            </FooterContainer>
-
+            <Footer />
         </PageContainer>
     )
 }
@@ -76,43 +94,5 @@ const ButtonsContainer = styled.div`
     }
     a {
         text-decoration: none;
-    }
-`
-const FooterContainer = styled.div`
-    width: 100%;
-    height: 120px;
-    background-color: #C3CFD9;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 20px;
-    position: fixed;
-    bottom: 0;
-
-    div:nth-child(1) {
-        box-shadow: 0px 2px 4px 2px #0000001A;
-        border-radius: 3px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        margin: 12px;
-        img {
-            width: 50px;
-            height: 70px;
-            padding: 8px;
-        }
-    }
-
-    div:nth-child(2) {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        p {
-            text-align: left;
-            &:nth-child(2) {
-                margin-top: 10px;
-            }
-        }
     }
 `
