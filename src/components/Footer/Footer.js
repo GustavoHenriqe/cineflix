@@ -1,10 +1,7 @@
 import { useState } from "react"
 import {  FooterContainer } from "../Footer/style"
 
-export default function Footer() {
-    const [image, setImage] = useState("")
-    const [title, setTitle] = useState("")
-    const [dateSession, setDateSession] = useState("")
+export default function Footer({image, title, date, weekday}) {
 
     return (
         <FooterContainer>
@@ -13,7 +10,7 @@ export default function Footer() {
             </div>
             <div>
                 <p>{title}</p>
-                <p>{dateSession}</p>
+                <p>{weekday} - {date}</p>
             </div>
         </FooterContainer>
     )

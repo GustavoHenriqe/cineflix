@@ -71,7 +71,6 @@ export default function SeatsPage({setSucessResponse}) {
         event.preventDefault()
 
         if ( name !== "" || cpf !== "" || idsOfSeats.length !== 0 ) {
-
             const objectForm = { ids: idsOfSeats, name: name, cpf: cpf }
             const requestFormAPI = axios.post(API_CINEFLIX + "cineflex/seats/book-many", objectForm)
 
@@ -165,7 +164,7 @@ export default function SeatsPage({setSucessResponse}) {
                 >Reservar Assento(s)</button>
             </FormContainer>
 
-            <Footer />
+            <Footer image={seats.movie.posterURL} title={seats.movie.title} weekday={seats.day.weekday} date={seats.day.date} />
             
         </PageContainer>
     )

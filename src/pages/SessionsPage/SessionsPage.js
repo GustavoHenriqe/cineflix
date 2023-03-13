@@ -57,7 +57,7 @@ export default function SessionsPage() {
                     )
                 }
             </div>
-            <Footer />
+            <Footer image={sessions.posterURL} title={sessions.title} />
         </PageContainer>
     )
 }
