@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import { useState } from "react"
 
 import { BrowserRouter, Routes, Route} from "react-router-dom"
 
@@ -10,7 +10,9 @@ import Header from "./components/Header/Header"
 
 export default function App() {
 
-    
+    const [sucessResponse, setSucessResponse] = useState({})
+
+    console.log(sucessResponse)
 
     return (
         <>
@@ -26,12 +28,12 @@ export default function App() {
                         element={<SessionsPage />} 
                     />
                     <Route 
-                        path="/assentos/:idSeats" 
-                        element={<SeatsPage />}
+                        path="/assentos/:idSeats"
+                        element={<SeatsPage setSucessResponse={setSucessResponse} />}
                     />
                     <Route
                         path="/sucesso"
-                        element={<SuccessPage />}
+                        element={<SuccessPage sucessResponse={sucessResponse} />}
                     />
                 </Routes>
             </BrowserRouter>

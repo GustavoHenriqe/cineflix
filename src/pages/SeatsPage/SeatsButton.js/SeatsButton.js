@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { SeatItem } from "./style"
 
-export default function SeatsButton({isAvailable, id, name, _colors, setIdsOfSeats, idsOfSeats}) {
+export default function SeatsButton({isAvailable, id, name, _colors, setIdsOfSeats, idsOfSeats, setNameOfSeats, namesOfSeats}) {
 
     const [isSelected, setIsSelected] = useState(false)
 
@@ -12,10 +12,10 @@ export default function SeatsButton({isAvailable, id, name, _colors, setIdsOfSea
         }
 
         if ( isAvailable === true ) {
-            return _colors[0]
+            return _colors[2]
 
         }else if (isAvailable === false) {
-            return _colors[2]
+            return _colors[0]
         }
     }
 
@@ -29,8 +29,19 @@ export default function SeatsButton({isAvailable, id, name, _colors, setIdsOfSea
         }
     }
 
+    function toCheckArrayNameAndToReplace() {
+        if ( namesOfSeats.includes(name) === false ) {
+            setNameOfSeats([...namesOfSeats, name])
+
+        } else {
+            const newArray = namesOfSeats.filter(index => index != name)
+            setNameOfSeats(newArray)
+        }
+    }
+
     function clickButton() {
         toCheckArrayIdsAndToReplace()
+        toCheckArrayNameAndToReplace()
         setIsSelected(!isSelected)
     }
 

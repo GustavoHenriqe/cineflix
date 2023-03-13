@@ -17,6 +17,7 @@ export const SeatItem = styled.button`
     margin: 5px 3px;
     cursor: pointer;
     &:disabled{
-        cursor: auto
+        cursor: auto;
+        background-color: ${props => props._color.color};
     }
 `

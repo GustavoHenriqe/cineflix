@@ -3,13 +3,21 @@ import { API_CINEFLIX } from "../../constants/API"
 
 import { useEffect, useState } from "react"
 
-import { useParams, Link } from "react-router-dom"
+import { 
+    PageContainer, 
+    SeatsContainer, 
+    CaptionItem, 
+    CaptionContainer, 
+    CaptionCircle, 
+    FormContainer
+} from "./style"
 
-import styled from "styled-components"
+import { useParams, useNavigate } from "react-router-dom"
+
 import Footer from "../../components/Footer/Footer"
 import SeatsButton from "./SeatsButton.js/SeatsButton"
 
-export default function SeatsPage() {
+export default function SeatsPage({setSucessResponse}) {
     const _colors = [{
         color: "#808F9D",
         border: "#C3CFD9"
@@ -20,10 +28,15 @@ export default function SeatsPage() {
         color: "#FBE192",
         border: "#F7C52B"
     }]
+
     const { idSeats } = useParams()
     const [seats, setSeats] = useState([])
+    const navigate = useNavigate()
 
+    const [namesOfSeats, setNameOfSeats] = useState([])
     const [idsOfSeats, setIdsOfSeats] = useState([])
+    const [name, setName] = useState("")
+    const [cpf, setCpf] = useState("")
 
     useEffect(() => {
         const requestSeatsAPI = axios.get(API_CINEFLIX + `cineflex/showtimes/${idSeats}/seats`)
@@ -46,6 +59,43 @@ export default function SeatsPage() {
         )
     }
 
+    function nameInput(event) {
+        setName(event.target.value)
+    }
+
+    function cpfInput(event) {
+        setCpf(event.target.value)
+    }
+
+    function sendToChechFormAndSend(event){
+        event.preventDefault()
+
+        if ( name !== "" || cpf !== "" || idsOfSeats.length !== 0 ) {
+
+            const objectForm = { ids: idsOfSeats, name: name, cpf: cpf }
+            const requestFormAPI = axios.post(API_CINEFLIX + "cineflex/seats/book-many", objectForm)
+
+            requestFormAPI.then(
+                res => {
+                    setSucessResponse({
+                        title: seats.movie.title,
+                        date: seats.day.date,
+                        hour: seats.name,
+                        seats: namesOfSeats,
+                        cpf: cpf,
+                        name: name
+                    })
+                    navigate("/sucesso")
+                }
+            )
+            
+            requestFormAPI.catch(
+                res => alert(res)
+            )
+        }
+        
+    }
+
     return (
         <PageContainer>
             <h1>Selecione o(s) assento(s)</h1>
@@ -58,6 +108,8 @@ export default function SeatsPage() {
                             _colors={_colors}
                             setIdsOfSeats={setIdsOfSeats}
                             idsOfSeats={idsOfSeats}
+                            namesOfSeats={namesOfSeats}
+                            setNameOfSeats={setNameOfSeats}
                             key={seat.id}
                         />
                     )
@@ -90,76 +142,31 @@ export default function SeatsPage() {
 
             <FormContainer>
                 <label>Nome do Comprador:</label>
-                <input placeholder="Digite seu nome..." />
+                <input 
+                    type="text" 
+                    placeholder="Digite seu nome..."
+                    value={name}
+                    onChange={(event) => nameInput(event)}
+                    required 
+                />
 
                 <label>CPF do Comprador:</label>
-                <input placeholder="Digite seu CPF..." />
+                <input 
+                    type="text" 
+                    placeholder="Digite seu CPF..."
+                    onChange={(event) => cpfInput(event)}
+                    value={cpf}
+                    maxLength={11}
+                />
 
-                <button>Reservar Assento(s)</button>
+                <button 
+                    type="submit"
+                    onClick={sendToChechFormAndSend}
+                >Reservar Assento(s)</button>
             </FormContainer>
 
             <Footer />
-
+            
         </PageContainer>
     )
 }
-
-const PageContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Roboto';
-    font-size: 24px;
-    text-align: center;
-    color: #293845;
-    margin-top: 30px;
-    padding-bottom: 120px;
-    padding-top: 70px;
-`
-const SeatsContainer = styled.div`
-    width: 330px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
-`
-const FormContainer = styled.div`
-    width: calc(100vw - 40px); 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 20px 0;
-    font-size: 18px;
-    button {
-        align-self: center;
-    }
-    input {
-        width: calc(100vw - 60px);
-    }
-`
-const CaptionContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 300px;
-    justify-content: space-between;
-    margin: 20px;
-`
-const CaptionCircle = styled.div`
-    border: 1px solid ${props => props.border};
-    background-color: ${props => props.color};
-    height: 25px;
-    width: 25px;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 5px 3px;
-`
-const CaptionItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
-`
