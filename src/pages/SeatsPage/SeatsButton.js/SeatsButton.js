@@ -47,7 +47,8 @@ export default function SeatsButton({isAvailable, id, name, _colors, setIdsOfSea
 
     return (
         <>
-            <SeatItem 
+            <SeatItem
+                data-test="seat" 
                 disabled={isAvailable} 
                 _color={whichColor()}
                 onClick={clickButton}

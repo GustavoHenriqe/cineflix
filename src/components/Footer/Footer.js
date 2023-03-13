@@ -4,7 +4,7 @@ import {  FooterContainer } from "../Footer/style"
 export default function Footer({image, title, date, weekday}) {
 
     return (
-        <FooterContainer>
+        <FooterContainer data-test="footer">
             <div>
                 <img src={image} alt={title} />
             </div>

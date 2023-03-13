@@ -3,12 +3,12 @@ import { API_CINEFLIX } from "../../constants/API"
 
 import { useEffect, useState } from "react"
 
-import { 
-    PageContainer, 
-    SeatsContainer, 
-    CaptionItem, 
-    CaptionContainer, 
-    CaptionCircle, 
+import {
+    PageContainer,
+    SeatsContainer,
+    CaptionItem,
+    CaptionContainer,
+    CaptionCircle,
     FormContainer
 } from "./style"
 
@@ -17,7 +17,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import Footer from "../../components/Footer/Footer"
 import SeatsButton from "./SeatsButton.js/SeatsButton"
 
-export default function SeatsPage({setSucessResponse}) {
+export default function SeatsPage({ setSucessResponse }) {
     const _colors = [{
         color: "#808F9D",
         border: "#C3CFD9"
@@ -51,7 +51,7 @@ export default function SeatsPage({setSucessResponse}) {
 
     }, [])
 
-    if ( seats.length === 0 ) {
+    if (seats.length === 0) {
         return (
             <>
                 carregando...
@@ -67,10 +67,10 @@ export default function SeatsPage({setSucessResponse}) {
         setCpf(event.target.value)
     }
 
-    function sendToChechFormAndSend(event){
+    function sendToChechFormAndSend(event) {
         event.preventDefault()
 
-        if ( name !== "" || cpf !== "" || idsOfSeats.length !== 0 ) {
+        if (name !== "" || cpf !== "" || idsOfSeats.length !== 0) {
             const objectForm = { ids: idsOfSeats, name: name, cpf: cpf }
             const requestFormAPI = axios.post(API_CINEFLIX + "cineflex/seats/book-many", objectForm)
 
@@ -87,12 +87,11 @@ export default function SeatsPage({setSucessResponse}) {
                     navigate("/sucesso")
                 }
             )
-            
+
             requestFormAPI.catch(
                 res => alert(res)
             )
         }
-        
     }
 
     return (
@@ -100,39 +99,39 @@ export default function SeatsPage({setSucessResponse}) {
             <h1>Selecione o(s) assento(s)</h1>
             <SeatsContainer>
                 {seats.seats.map(seat =>
-                        <SeatsButton
-                            isAvailable={seat.isAvailable}
-                            id={seat.id}
-                            name={seat.name}
-                            _colors={_colors}
-                            setIdsOfSeats={setIdsOfSeats}
-                            idsOfSeats={idsOfSeats}
-                            namesOfSeats={namesOfSeats}
-                            setNameOfSeats={setNameOfSeats}
-                            key={seat.id}
-                        />
-                    )
+                    <SeatsButton
+                        isAvailable={seat.isAvailable}
+                        id={seat.id}
+                        name={seat.name}
+                        _colors={_colors}
+                        setIdsOfSeats={setIdsOfSeats}
+                        idsOfSeats={idsOfSeats}
+                        namesOfSeats={namesOfSeats}
+                        setNameOfSeats={setNameOfSeats}
+                        key={seat.id}
+                    />
+                )
                 }
             </SeatsContainer>
 
             <CaptionContainer>
                 <CaptionItem>
-                    <CaptionCircle 
-                        color={_colors[1].color} 
+                    <CaptionCircle
+                        color={_colors[1].color}
                         border={_colors[1].border}
                     />
                     Selecionado
                 </CaptionItem>
                 <CaptionItem>
                     <CaptionCircle
-                        color={_colors[0].color} 
+                        color={_colors[0].color}
                         border={_colors[0].border}
                     />
                     Disponível
                 </CaptionItem>
                 <CaptionItem>
-                    <CaptionCircle 
-                        color={_colors[2].color} 
+                    <CaptionCircle
+                        color={_colors[2].color}
                         border={_colors[2].border}
                     />
                     Indisponível
@@ -141,31 +140,39 @@ export default function SeatsPage({setSucessResponse}) {
 
             <FormContainer>
                 <label>Nome do Comprador:</label>
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     placeholder="Digite seu nome..."
                     value={name}
                     onChange={(event) => nameInput(event)}
-                    required 
+                    required
+                    data-test="client-name"
                 />
 
                 <label>CPF do Comprador:</label>
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     placeholder="Digite seu CPF..."
                     onChange={(event) => cpfInput(event)}
                     value={cpf}
                     maxLength={11}
+                    data-test="client-cpf"
                 />
 
-                <button 
+                <button
                     type="submit"
                     onClick={sendToChechFormAndSend}
+                    data-test="book-seat-btn"
                 >Reservar Assento(s)</button>
             </FormContainer>
 
-            <Footer image={seats.movie.posterURL} title={seats.movie.title} weekday={seats.day.weekday} date={seats.day.date} />
-            
+            <Footer 
+                image={seats.movie.posterURL} 
+                title={seats.movie.title} 
+                weekday={seats.day.weekday} 
+                date={seats.day.date} 
+            />
+
         </PageContainer>
     )
 }
