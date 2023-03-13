@@ -17,8 +17,8 @@ export default function SeatsPage() {
         color: "#0E7D71",
         border: "#1AAE9E"
     }, {
-        color: "#F7C52B",
-        border: "#FBE192"
+        color: "#FBE192",
+        border: "#F7C52B"
     }]
     const { idSeats } = useParams()
     const [seats, setSeats] = useState([])
@@ -49,21 +49,16 @@ export default function SeatsPage() {
     return (
         <PageContainer>
             <h1>Selecione o(s) assento(s)</h1>
-
             <SeatsContainer>
                 {seats.seats.map(seat =>
-
                         <SeatsButton
                             isAvailable={seat.isAvailable}
                             id={seat.id}
                             name={seat.name}
-
                             _colors={_colors}
-
                             setIdsOfSeats={setIdsOfSeats}
                             idsOfSeats={idsOfSeats}
-
-                            key={seat.id} 
+                            key={seat.id}
                         />
                     )
                 }
@@ -94,10 +89,10 @@ export default function SeatsPage() {
             </CaptionContainer>
 
             <FormContainer>
-                Nome do Comprador:
+                <label>Nome do Comprador:</label>
                 <input placeholder="Digite seu nome..." />
 
-                CPF do Comprador:
+                <label>CPF do Comprador:</label>
                 <input placeholder="Digite seu CPF..." />
 
                 <button>Reservar Assento(s)</button>
